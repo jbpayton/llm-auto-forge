@@ -5,6 +5,7 @@ from langchain.chat_models import ChatOpenAI
 from langchain.memory import ConversationBufferMemory
 from langchain.schema import SystemMessage, HumanMessage, AIMessage
 
+from tools.ToolRegistry import ToolRegistry
 
 class DialogueAgent:
     def __init__(
@@ -48,6 +49,7 @@ class DialogueAgentWithTools(DialogueAgent):
             tools: List,
     ) -> None:
         super().__init__(name, system_message, model)
+        ToolRegistry().set_tools(name, tools)
         self.tools = tools
 
     def send(self) -> str:

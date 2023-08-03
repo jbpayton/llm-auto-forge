@@ -1,8 +1,10 @@
 from langchain.tools import tool
 
 @tool("example_tool", return_direct=True)
-def search_api(query: str) -> str:
+def example_tool(query: str) -> str:
     """This example tool returns the query string back to the console."""
+
+    # note the above string in teh triple quotes is the description. Each tool MUST have a description.
 
     # The code below is run when the tool is called.
     print(query)
