@@ -3,9 +3,9 @@ import importlib.util
 import os
 from tools.ToolRegistry import ToolRegistry
 
-@tool("tool_registration_tool", return_direct=True)
+@tool("tool_registration_tool", return_direct=False)
 def tool_registration_tool(tool_function: str, tool_filename: str, agent_name: str) -> str:
-    """This tool allows an agent to load a tool for its own use given the tool function name, tool filename, and the agent's name."""
+    """This tool allows an agent to load a tool for its own use given the tool function name, tool filename (just the file name, no directory), and the agent's name."""
 
     # Parse the module name from the filename
     module_name = os.path.splitext(os.path.basename(tool_filename))[0]
@@ -23,5 +23,5 @@ def tool_registration_tool(tool_function: str, tool_filename: str, agent_name: s
 
 
     # After it is finished the tool should return a string that is the output of the tool.
-    output = "Registered new tool, you can now use: " + loaded_tool.description
+    output = "Tool Registered successfully."
     return output

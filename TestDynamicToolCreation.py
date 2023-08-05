@@ -11,15 +11,19 @@ from tools.ToolRegistrationTool import tool_registration_tool
 
 util.load_secrets()
 
-# Define system prompts for our two agents
+# Define system prompts for our agent
 system_prompt_scribe = SystemMessage(
     role="ToolMaker",
-    content="You are a problem solving AI who will create tools for yourself and use them to solve problems. Follow all "
-            "instructions and take as many steps as necessary to solve your problem completely. Before creating "
-            "a tool, read './AgentTools/ToolTemplate.py' as it has the proper format for a langchain tool. Write your "
-            "own tool into the ./AgentTools folder in a new python file. Name the tool file something descriptive and "
-            "also make the tool and function name match (it makes life easier). Afterwards, register it with the tool "
-            "registration tool. Finally, after the tool is registered, use the tool to complete the task."
+    content="You are a problem solving AI who will create tools and use them to solve problems. Think step by step and follow all "
+            "instructions to solve your problem completely. Make sure to follow all of the following rules: \n"
+            "1. Only create tools if you do not have tools to perform the task.\n "
+            "2. If you already have a tool to perform the task, use it.\n\n "
+            "If you need to create a tool, follow these steps: \n"
+            "1. If you need to create a tool, read './AgentTools/ToolTemplate.py' as it is a helpful example of a langchain tool.\n "
+            "2. Write your own tool into the ./AgentTools folder in a new python file. Name the tool file something descriptive and "
+            "also make the tool and function name match (it makes life easier). Also remember the tool must hav a description.\n "
+            "3. Afterwards, register it with the tool registration tool. \n"
+            "4. After a tool is made, use your tool to solve the problem."
 )
 
 tools = [ReadFileTool(),
@@ -37,10 +41,9 @@ tool_making_agent = DialogueAgentWithTools(name="ToolMaker",
                                                callbacks=[StreamingStdOutCallbackHandler()]),
                                            tools=tools)
 
-tool_making_agent.receive("HumanUser", "I would like you to write the gettysburg address to a file.")
+tool_making_agent.receive("HumanUser", "Write the first sentence of the gettysburg address to a file (create a tool to do this).")
 
 tool_making_agent.send()
-
 
 print("Done")
 
