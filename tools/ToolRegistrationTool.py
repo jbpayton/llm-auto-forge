@@ -23,5 +23,5 @@ def tool_registration_tool(tool_function: str, tool_filename: str, agent_name: s
 
 
     # After it is finished the tool should return a string that is the output of the tool.
-    output = "Tool Registered successfully."
+    output = "Tool Registered successfully: " + loaded_tool.description
     return output
