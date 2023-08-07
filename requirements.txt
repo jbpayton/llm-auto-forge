@@ -3,3 +3,12 @@ pydantic~=1.10.12
 duckduckgo-search
 wikipedia
 openai
+playwright
+lxml
+
+pillow
+matplotlib
+chromadb
+tiktoken
+sentence_transformers
+google-api-python-client
