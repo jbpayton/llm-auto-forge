@@ -1,4 +1,3 @@
-from langchain import WikipediaAPIWrapper
 from langchain.callbacks import StreamingStdOutCallbackHandler
 from langchain.chat_models import ChatOpenAI
 
@@ -6,10 +5,11 @@ from prompts import BROWSER_TOOL_MAKER_PROMPT
 from Agents import DialogueAgentWithTools
 
 import util
-from langchain.tools import WikipediaQueryRun, Tool
-from langchain.tools.file_management import WriteFileTool, ReadFileTool
-from langchain.agents.agent_toolkits import PlayWrightBrowserToolkit
-from langchain.tools.playwright.utils import (
+from langchain.tools import Tool
+from langchain.agents.agent_toolkits import FileManagementToolkit
+from tools.playwrightMod.toolkit import PlayWrightBrowserToolkit
+
+from tools.playwrightMod.utils import (
     create_sync_playwright_browser
 )
 from langchain.utilities import GoogleSearchAPIWrapper
@@ -22,12 +22,21 @@ util.load_secrets()
 # Define system prompts for our agent
 system_prompt_scribe = BROWSER_TOOL_MAKER_PROMPT
 
-#initialize the browser toolkit
+# initialize file management tools
+file_tools = FileManagementToolkit(
+    selected_tools=["read_file", "write_file", "list_directory", "copy_file", "move_file", "file_delete"]
+).get_tools()
+
+# initialize the browser toolkit
 browser = create_sync_playwright_browser()
+context = browser.new_context(
+  user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:106.0) Gecko/20100101 Firefox/106.0'
+)
+
 browser_toolkit = PlayWrightBrowserToolkit.from_browser(sync_browser=browser)
 browser_tools = browser_toolkit.get_tools()
 
-#initialie search API
+# initialie search API
 search = GoogleSearchAPIWrapper()
 
 def top10_results(query):
@@ -39,12 +48,9 @@ GoogleSearchTool = Tool(
     func=top10_results,
 )
 
-tools = [ReadFileTool(),
-         WriteFileTool(),
-         WikipediaQueryRun(api_wrapper=WikipediaAPIWrapper()),
-         GoogleSearchTool,
+tools = [GoogleSearchTool,
          tool_query_tool,
-         tool_registration_tool] + browser_tools
+         tool_registration_tool] + file_tools + browser_tools
 
 # Initialize our agents with their respective roles and system prompts
 tool_making_agent = DialogueAgentWithTools(name="ToolMaker",

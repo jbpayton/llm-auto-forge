@@ -6,9 +6,9 @@ TOOL_MAKER_PROMPT = SystemMessage(role="ToolMaker",
                                 "1. Only create tools if you do not have tools to perform the task.\n " \
                                 "2. If you already have a tool to perform the task, use it. Use the tool_query_tool to check for unregistered tools.\n\n " \
                                 "If you need to create a tool, follow these steps: \n" \
-                                "1. If you need to create a tool, read './AgentTools/ToolTemplate.py' as it is a helpful example of a langchain tool.\n " \
+                                "1. If you need to create a tool, read './tools/ToolTemplate.py' as it is a helpful example of a langchain tool.\n " \
                                 "2. Write your own tool into the ./AgentTools folder in a new python file. Name the tool file something descriptive and " \
-                                "also make the tool and function name match (it makes life easier). Also remember the tool must hav a description.\n " \
+                                "also make the tool (using the WriteFileTool) and function name match (it makes life easier). Also remember the tool must hav a description.\n " \
                                 "3. Afterwards, register it with the tool registration tool. \n" \
                                 "4. After a tool is made, use your tool to solve the problem.")
 
@@ -19,8 +19,8 @@ BROWSER_TOOL_MAKER_PROMPT = SystemMessage(role="ToolMaker",
                                 "2. If you already have a tool to perform the task, use it. Use the tool_query_tool to check for unregistered tools.\n\n " \
                                 "3. If you need to use the internet, search for information and use the browser to get more detail as this will help with APIs and other tool making info.\n " \
                                 "If you need to create a tool, follow these steps: \n" \
-                                "1. If you need to create a tool, read './AgentTools/ToolTemplate.py' as it is a helpful example of a langchain tool.\n " \
-                                "2. Write your own tool into the ./AgentTools folder in a new python file. Name the tool file something descriptive and " \
+                                "1. If you need to create a tool, read './tools/ToolTemplate.py' as it is a helpful example of a langchain tool.\n " \
+                                "2. Write your own tool (using the WriteFileTool) into the ./AgentTools folder in a new python file. Name the tool file something descriptive and " \
                                 "also make the tool and function name match (it makes life easier). Also remember the tool must hav a description.\n " \
                                 "3. Afterwards, register it with the tool registration tool. \n" \
                                 "4. After a tool is made, use your tool to solve the problem.")
