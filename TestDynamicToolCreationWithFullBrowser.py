@@ -7,11 +7,7 @@ from Agents import DialogueAgentWithTools
 import util
 from langchain.tools import Tool
 from langchain.agents.agent_toolkits import FileManagementToolkit
-from tools.playwrightMod.toolkit import PlayWrightBrowserToolkit
 
-from tools.playwrightMod.utils import (
-    create_sync_playwright_browser
-)
 from langchain.utilities import GoogleSearchAPIWrapper
 
 from tools.ToolRegistrationTool import tool_registration_tool
@@ -27,14 +23,6 @@ file_tools = FileManagementToolkit(
     selected_tools=["read_file", "write_file", "list_directory", "copy_file", "move_file", "file_delete"]
 ).get_tools()
 
-# initialize the browser toolkit
-browser = create_sync_playwright_browser()
-context = browser.new_context(
-  user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:106.0) Gecko/20100101 Firefox/106.0'
-)
-
-browser_toolkit = PlayWrightBrowserToolkit.from_browser(sync_browser=browser)
-browser_tools = browser_toolkit.get_tools()
 
 # initialie search API
 search = GoogleSearchAPIWrapper()
@@ -50,7 +38,7 @@ GoogleSearchTool = Tool(
 
 tools = [GoogleSearchTool,
          tool_query_tool,
-         tool_registration_tool] + file_tools + browser_tools
+         tool_registration_tool] + file_tools
 
 # Initialize our agents with their respective roles and system prompts
 tool_making_agent = DialogueAgentWithTools(name="ToolMaker",
@@ -62,7 +50,8 @@ tool_making_agent = DialogueAgentWithTools(name="ToolMaker",
                                                callbacks=[StreamingStdOutCallbackHandler()]),
                                            tools=tools)
 
-tool_making_agent.receive("HumanUser", "Create a meme image of a cat with funny bottom text and top text.")
+tool_making_agent.receive("HumanUser", "Create a tool that can request html from a url, save it to a chroma store and "
+                                       "ask a question about it. tools/ToolRegistry.py has an example of using chroma")
 
 tool_making_agent.send()
 
