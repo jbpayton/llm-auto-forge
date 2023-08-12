@@ -12,6 +12,7 @@ from langchain.utilities import GoogleSearchAPIWrapper
 
 from tools.ToolRegistrationTool import tool_registration_tool
 from tools.ToolQueryTool import tool_query_tool
+from tools.WebScrapingCache import query_website, paged_read_website
 
 util.load_secrets()
 
@@ -38,7 +39,9 @@ GoogleSearchTool = Tool(
 
 tools = [GoogleSearchTool,
          tool_query_tool,
-         tool_registration_tool] + file_tools
+         tool_registration_tool,
+         paged_read_website,
+         ] + file_tools
 
 # Initialize our agents with their respective roles and system prompts
 tool_making_agent = DialogueAgentWithTools(name="ToolMaker",
@@ -50,8 +53,7 @@ tool_making_agent = DialogueAgentWithTools(name="ToolMaker",
                                                callbacks=[StreamingStdOutCallbackHandler()]),
                                            tools=tools)
 
-tool_making_agent.receive("HumanUser", "Create a tool that can request html from a url, save it to a chroma store and "
-                                       "ask a question about it. tools/ToolRegistry.py has an example of using chroma")
+tool_making_agent.receive("HumanUser", "Use th internet and create the funniest meme picture ever.")
 
 tool_making_agent.send()
 

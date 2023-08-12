@@ -15,3 +15,4 @@ google-api-python-client
 
 requests~=2.31.0
 beautifulsoup4~=4.12.2
+markdownify~=0.11.6

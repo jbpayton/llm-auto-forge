@@ -1,2 +1,4 @@
 from tools.ToolQueryTool import tool_query_tool
 from tools.ToolRegistrationTool import tool_registration_tool
+from tools.WebScrapingCache import query_website
+from tools.WebScrapingCache import paged_read_website
