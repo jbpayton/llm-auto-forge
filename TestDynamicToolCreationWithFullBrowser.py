@@ -10,9 +10,9 @@ from langchain.agents.agent_toolkits import FileManagementToolkit
 
 from langchain.utilities import GoogleSearchAPIWrapper
 
-from tools.ToolRegistrationTool import tool_registration_tool
+from tools.ToolRegistrationTool import tool_registration_tool, query_available_modules
 from tools.ToolQueryTool import tool_query_tool
-from tools.WebScrapingCache import query_website, paged_read_website
+from tools.LLMBrowsingTools import query_website, paged_web_browser
 
 util.load_secrets()
 
@@ -40,7 +40,8 @@ GoogleSearchTool = Tool(
 tools = [GoogleSearchTool,
          tool_query_tool,
          tool_registration_tool,
-         paged_read_website,
+         query_available_modules,
+         paged_web_browser,
          ] + file_tools
 
 # Initialize our agents with their respective roles and system prompts
@@ -53,7 +54,9 @@ tool_making_agent = DialogueAgentWithTools(name="ToolMaker",
                                                callbacks=[StreamingStdOutCallbackHandler()]),
                                            tools=tools)
 
-tool_making_agent.receive("HumanUser", "Use th internet and create the funniest meme picture ever.")
+tool_making_agent.receive("HumanUser", "Can you tell me what is in this image and add an in-picture caption to this "
+                                       "image? ./TestInput/mystery_image.jpg Write the captioned image to "
+                                       "./TestOutput/captioned_image.jpg")
 
 tool_making_agent.send()
 

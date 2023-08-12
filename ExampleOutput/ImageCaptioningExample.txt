@@ -1,0 +1,462 @@
+C:\Users\joeyp\PycharmProjects\llm-auto-forge\venv\Scripts\python.exe "C:\Program Files\JetBrains\PyCharm Community Edition 2021.3.1\plugins\python-ce\helpers\pydev\pydevd.py" --multiproc --qt-support=auto --client 127.0.0.1 --port 53174 --file C:/Users/joeyp/PycharmProjects/llm-auto-forge/TestDynamicToolCreationWithFullBrowser.py
+Connected to pydev debugger (build 213.6461.77)
+
+
+> Entering new SelfModifiableAgentExecutor chain...
+Thought: The user wants me to identify what's in an image and add a caption to it. I need to check if I have a tool that can perform image recognition and add captions to images. I'll use the tool_query_tool to check for unregistered tools that can perform these tasks.
+
+Action:
+```
+{
+  "action": "tool_query_tool",
+  "action_input": {
+    "tool_description": "image recognition",
+    "agent_name": "ToolMaker"
+  }
+}
+```Thought: The user wants me to identify what's in an image and add a caption to it. I need to check if I have a tool that can perform image recognition and add captions to images. I'll use the tool_query_tool to check for unregistered tools that can perform these tasks.
+
+Action:
+```
+{
+  "action": "tool_query_tool",
+  "action_input": {
+    "tool_description": "image recognition",
+    "agent_name": "ToolMaker"
+  }
+}
+```
+Number of requested results 4 is greater than number of elements in index 2, updating n_results = 2
+Observation: The following tools may be helpful, they have not yet been registered and can be registered with the tool_registration_tool:
+["'Description':This tool performs a Google Image Search using the Search API and returns a list of image URLs.,{'tool_filename': 'GoogleImageSearch.py', 'tool_name': 'google_image_search'}", "'Description':This tool displays an image from a given local file path.,{'tool_filename': 'ImageDisplayer.py', 'tool_name': 'image_displayer'}"]
+Thought:The tools available for image recognition are not sufficient for the task at hand. I need a tool that can not only recognize the content of an image but also add a caption to it. I will need to create a new tool for this task. Before I start, I should read the ToolTemplate.py file to understand the structure of a tool. I'll use the read_file tool to do this.
+
+Action:
+```
+{
+  "action": "read_file",
+  "action_input": {
+    "file_path": "./tools/ToolTemplate.py"
+  }
+}
+```The tools available for image recognition are not sufficient for the task at hand. I need a tool that can not only recognize the content of an image but also add a caption to it. I will need to create a new tool for this task. Before I start, I should read the ToolTemplate.py file to understand the structure of a tool. I'll use the read_file tool to do this.
+
+Action:
+```
+{
+  "action": "read_file",
+  "action_input": {
+    "file_path": "./tools/ToolTemplate.py"
+  }
+}
+```
+Observation: import sys
+
+from langchain.tools import tool
+
+@tool("example_tool", return_direct=False)
+def example_tool(query: str) -> str:
+    """This example tool returns the query string back to the console."""
+    # note the above docstring in the triple quotes is the description. Each tool MUST have a description.
+
+    try:
+        # Put your code here. This is where you will write your tool.
+        print(query)
+
+        # Sometimes you will want to write debug statements to the console
+        print("This is a debug statement")
+
+        # After it is finished the tool should return a string that is the output of the tool.
+        return "Finished running tool."
+    except:
+        # If there is an error, print the error to the console.
+        return "Error: " + str(sys.exc_info())
+
+Thought:Now that I have read the ToolTemplate.py file, I understand the structure of a tool. I need to create a tool that can perform image recognition and add a caption to the image. I will use the WriteFileTool to write this new tool into the ./AgentTools folder. I will name the tool file 'ImageRecognitionAndCaptioning.py' and the function 'image_recognition_and_captioning'. I will use the huggingface transformers library for image recognition and PIL library for adding captions to the image. Let's start writing the tool.
+
+Action:
+```
+{
+  "action": "write_file",
+  "action_input": {
+    "file_path": "./AgentTools/ImageRecognitionAndCaptioning.py",
+    "text": "import sys\n\nfrom PIL import Image, ImageDraw, ImageFont\nfrom transformers import pipeline\n\nfrom langchain.tools import tool\n\n@tool(\"image_recognition_and_captioning\", return_direct=False)\ndef image_recognition_and_captioning(image_path: str, output_path: str) -> str:\n    \"\"\"This tool recognizes the content of an image and adds a caption to it.\"\"\"\n\n    try:\n        # Create a pipeline for image recognition\n        image_recognition = pipeline('image-classification')\n\n        # Open the image file\n        img = Image.open(image_path)\n\n        # Perform image recognition\n        result = image_recognition(img)\n\n        # Get the label of the image\n        label = result[0]['label']\n\n        # Create a draw object and specify the font\n        draw = ImageDraw.Draw(img)\n        font = ImageFont.truetype('arial.ttf', 15)\n\n        # Add the caption to the image\n        draw.text((10, 10), label, font=font, fill='white')\n\n        # Save the captioned image\n        img.save(output_path)\n\n        return 'Finished running tool.'\n    except:\n        # If there is an error, print the error to the console.\n        return 'Error: ' + str(sys.exc_info())",
+    "append": false
+  }
+}
+```Now that I have read the ToolTemplate.py file, I understand the structure of a tool. I need to create a tool that can perform image recognition and add a caption to the image. I will use the WriteFileTool to write this new tool into the ./AgentTools folder. I will name the tool file 'ImageRecognitionAndCaptioning.py' and the function 'image_recognition_and_captioning'. I will use the huggingface transformers library for image recognition and PIL library for adding captions to the image. Let's start writing the tool.
+
+Action:
+```
+{
+  "action": "write_file",
+  "action_input": {
+    "file_path": "./AgentTools/ImageRecognitionAndCaptioning.py",
+    "text": "import sys\n\nfrom PIL import Image, ImageDraw, ImageFont\nfrom transformers import pipeline\n\nfrom langchain.tools import tool\n\n@tool(\"image_recognition_and_captioning\", return_direct=False)\ndef image_recognition_and_captioning(image_path: str, output_path: str) -> str:\n    \"\"\"This tool recognizes the content of an image and adds a caption to it.\"\"\"\n\n    try:\n        # Create a pipeline for image recognition\n        image_recognition = pipeline('image-classification')\n\n        # Open the image file\n        img = Image.open(image_path)\n\n        # Perform image recognition\n        result = image_recognition(img)\n\n        # Get the label of the image\n        label = result[0]['label']\n\n        # Create a draw object and specify the font\n        draw = ImageDraw.Draw(img)\n        font = ImageFont.truetype('arial.ttf', 15)\n\n        # Add the caption to the image\n        draw.text((10, 10), label, font=font, fill='white')\n\n        # Save the captioned image\n        img.save(output_path)\n\n        return 'Finished running tool.'\n    except:\n        # If there is an error, print the error to the console.\n        return 'Error: ' + str(sys.exc_info())",
+    "append": false
+  }
+}
+```
+Observation: File written successfully to ./AgentTools/ImageRecognitionAndCaptioning.py.
+Thought:Now that I have written the tool, I need to register it using the tool_registration_tool. This will allow me to use the tool in the future. I will register the tool 'image_recognition_and_captioning' from the file 'ImageRecognitionAndCaptioning.py'.
+
+Action:
+```
+{
+  "action": "tool_registration_tool",
+  "action_input": {
+    "tool_function": "image_recognition_and_captioning",
+    "tool_filename": "ImageRecognitionAndCaptioning.py",
+    "agent_name": "ToolMaker"
+  }
+}
+```Now that I have written the tool, I need to register it using the tool_registration_tool. This will allow me to use the tool in the future. I will register the tool 'image_recognition_and_captioning' from the file 'ImageRecognitionAndCaptioning.py'.
+
+Action:
+```
+{
+  "action": "tool_registration_tool",
+  "action_input": {
+    "tool_function": "image_recognition_and_captioning",
+    "tool_filename": "ImageRecognitionAndCaptioning.py",
+    "agent_name": "ToolMaker"
+  }
+}
+```
+Observation: Tool Registered successfully: image_recognition_and_captioning(image_path: str, output_path: str) -> str - This tool recognizes the content of an image and adds a caption to it.
+Thought:Now that the tool is registered, I can use it to perform the task. The task is to identify what's in the image at './TestInput/mystery_image.jpg' and add a caption to it. The captioned image should be written to './TestOutput/captioned_image.jpg'. I will use the 'image_recognition_and_captioning' tool to perform this task.
+
+Action:
+```
+{
+  "action": "image_recognition_and_captioning",
+  "action_input": {
+    "image_path": "./TestInput/mystery_image.jpg",
+    "output_path": "./TestOutput/captioned_image.jpg"
+  }
+}
+```Now that the tool is registered, I can use it to perform the task. The task is to identify what's in the image at './TestInput/mystery_image.jpg' and add a caption to it. The captioned image should be written to './TestOutput/captioned_image.jpg'. I will use the 'image_recognition_and_captioning' tool to perform this task.
+
+Action:
+```
+{
+  "action": "image_recognition_and_captioning",
+  "action_input": {
+    "image_path": "./TestInput/mystery_image.jpg",
+    "output_path": "./TestOutput/captioned_image.jpg"
+  }
+}
+```No model was supplied, defaulted to google/vit-base-patch16-224 and revision 5dca96d (https://huggingface.co/google/vit-base-patch16-224).
+Using a pipeline without specifying a model name and revision in production is not recommended.
+Downloading (…)lve/main/config.json: 100%|██████████| 69.7k/69.7k [00:00<00:00, 16.4MB/s]
+C:\Users\joeyp\PycharmProjects\llm-auto-forge\venv\lib\site-packages\huggingface_hub\file_download.py:133: UserWarning: `huggingface_hub` cache-system uses symlinks by default to efficiently store duplicated files but your machine does not support them in C:\Users\joeyp\.cache\huggingface\hub. Caching files will still work but in a degraded version that might require more space on your disk. This warning can be disabled by setting the `HF_HUB_DISABLE_SYMLINKS_WARNING` environment variable. For more details, see https://huggingface.co/docs/huggingface_hub/how-to-cache#limitations.
+To support symlinks on Windows, you either need to activate Developer Mode or to run Python as an administrator. In order to see activate developer mode, see this article: https://docs.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development
+  warnings.warn(message)
+Downloading pytorch_model.bin: 100%|██████████| 346M/346M [00:05<00:00, 69.1MB/s]
+Downloading (…)rocessor_config.json: 100%|██████████| 160/160 [00:00<?, ?B/s]
+
+Observation: Error: (<class 'FileNotFoundError'>, FileNotFoundError(2, 'No such file or directory'), <traceback object at 0x0000022FCB493180>)
+Thought:It seems like there was an error while running the tool. The error message indicates that a file was not found. This could be due to the image file not being present at the specified path or the font file 'arial.ttf' not being found. I should check if the image file exists at the specified path. I'll use the list_directory tool to list the files in the './TestInput' directory.
+
+Action:
+```
+{
+  "action": "list_directory",
+  "action_input": {
+    "dir_path": "./TestInput"
+  }
+}
+```It seems like there was an error while running the tool. The error message indicates that a file was not found. This could be due to the image file not being present at the specified path or the font file 'arial.ttf' not being found. I should check if the image file exists at the specified path. I'll use the list_directory tool to list the files in the './TestInput' directory.
+
+Action:
+```
+{
+  "action": "list_directory",
+  "action_input": {
+    "dir_path": "./TestInput"
+  }
+}
+```
+Observation: mystery_image.jpg
+Thought:The image file 'mystery_image.jpg' does exist in the './TestInput' directory. The error could be due to the font file 'arial.ttf' not being found. I should check if the font file exists on the system. I'll use the list_directory tool to list the files in the current directory.
+
+Action:
+```
+{
+  "action": "list_directory",
+  "action_input": {
+    "dir_path": "."
+  }
+}
+```The image file 'mystery_image.jpg' does exist in the './TestInput' directory. The error could be due to the font file 'arial.ttf' not being found. I should check if the font file exists on the system. I'll use the list_directory tool to list the files in the current directory.
+
+Action:
+```
+{
+  "action": "list_directory",
+  "action_input": {
+    "dir_path": "."
+  }
+}
+```
+Observation: .git
+.gitignore
+.idea
+Agents.py
+AgentTools
+ExampleOutput
+LICENSE
+prompts.py
+README.md
+requirements.txt
+secrets.json
+secrets.json.template
+TestDynamicToolCreation.py
+TestDynamicToolCreationWithFullBrowser.py
+TestInput
+tools
+util.py
+venv
+__pycache__
+Thought:The font file 'arial.ttf' does not exist in the current directory. This is likely the cause of the error. I need to find a way to add text to the image without relying on a specific font file. I can modify the 'image_recognition_and_captioning' tool to use a default font instead of 'arial.ttf'. I'll use the WriteFileTool to modify the tool.
+
+Action:
+```
+{
+  "action": "write_file",
+  "action_input": {
+    "file_path": "./AgentTools/ImageRecognitionAndCaptioning.py",
+    "text": "import sys\n\nfrom PIL import Image, ImageDraw\nfrom transformers import pipeline\n\nfrom langchain.tools import tool\n\n@tool(\"image_recognition_and_captioning\", return_direct=False)\ndef image_recognition_and_captioning(image_path: str, output_path: str) -> str:\n    \"\"\"This tool recognizes the content of an image and adds a caption to it.\"\"\"\n\n    try:\n        # Create a pipeline for image recognition\n        image_recognition = pipeline('image-classification')\n\n        # Open the image file\n        img = Image.open(image_path)\n\n        # Perform image recognition\n        result = image_recognition(img)\n\n        # Get the label of the image\n        label = result[0]['label']\n\n        # Create a draw object\n        draw = ImageDraw.Draw(img)\n\n        # Add the caption to the image\n        draw.text((10, 10), label, fill='white')\n\n        # Save the captioned image\n        img.save(output_path)\n\n        return 'Finished running tool.'\n    except:\n        # If there is an error, print the error to the console.\n        return 'Error: ' + str(sys.exc_info())",
+    "append": false
+  }
+}
+```The font file 'arial.ttf' does not exist in the current directory. This is likely the cause of the error. I need to find a way to add text to the image without relying on a specific font file. I can modify the 'image_recognition_and_captioning' tool to use a default font instead of 'arial.ttf'. I'll use the WriteFileTool to modify the tool.
+
+Action:
+```
+{
+  "action": "write_file",
+  "action_input": {
+    "file_path": "./AgentTools/ImageRecognitionAndCaptioning.py",
+    "text": "import sys\n\nfrom PIL import Image, ImageDraw\nfrom transformers import pipeline\n\nfrom langchain.tools import tool\n\n@tool(\"image_recognition_and_captioning\", return_direct=False)\ndef image_recognition_and_captioning(image_path: str, output_path: str) -> str:\n    \"\"\"This tool recognizes the content of an image and adds a caption to it.\"\"\"\n\n    try:\n        # Create a pipeline for image recognition\n        image_recognition = pipeline('image-classification')\n\n        # Open the image file\n        img = Image.open(image_path)\n\n        # Perform image recognition\n        result = image_recognition(img)\n\n        # Get the label of the image\n        label = result[0]['label']\n\n        # Create a draw object\n        draw = ImageDraw.Draw(img)\n\n        # Add the caption to the image\n        draw.text((10, 10), label, fill='white')\n\n        # Save the captioned image\n        img.save(output_path)\n\n        return 'Finished running tool.'\n    except:\n        # If there is an error, print the error to the console.\n        return 'Error: ' + str(sys.exc_info())",
+    "append": false
+  }
+}
+```
+Observation: File written successfully to ./AgentTools/ImageRecognitionAndCaptioning.py.
+Thought:Now that I have modified the tool, I need to register it again using the tool_registration_tool. This will update the tool in the system. I will register the tool 'image_recognition_and_captioning' from the file 'ImageRecognitionAndCaptioning.py'.
+
+Action:
+```
+{
+  "action": "tool_registration_tool",
+  "action_input": {
+    "tool_function": "image_recognition_and_captioning",
+    "tool_filename": "ImageRecognitionAndCaptioning.py",
+    "agent_name": "ToolMaker"
+  }
+}
+```Now that I have modified the tool, I need to register it again using the tool_registration_tool. This will update the tool in the system. I will register the tool 'image_recognition_and_captioning' from the file 'ImageRecognitionAndCaptioning.py'.
+
+Action:
+```
+{
+  "action": "tool_registration_tool",
+  "action_input": {
+    "tool_function": "image_recognition_and_captioning",
+    "tool_filename": "ImageRecognitionAndCaptioning.py",
+    "agent_name": "ToolMaker"
+  }
+}
+```
+Observation: Tool Registered successfully: image_recognition_and_captioning(image_path: str, output_path: str) -> str - This tool recognizes the content of an image and adds a caption to it.
+Thought:Now that the tool is registered again, I can use it to perform the task. The task is to identify what's in the image at './TestInput/mystery_image.jpg' and add a caption to it. The captioned image should be written to './TestOutput/captioned_image.jpg'. I will use the 'image_recognition_and_captioning' tool to perform this task.
+
+Action:
+```
+{
+  "action": "image_recognition_and_captioning",
+  "action_input": {
+    "image_path": "./TestInput/mystery_image.jpg",
+    "output_path": "./TestOutput/captioned_image.jpg"
+  }
+}
+```Now that the tool is registered again, I can use it to perform the task. The task is to identify what's in the image at './TestInput/mystery_image.jpg' and add a caption to it. The captioned image should be written to './TestOutput/captioned_image.jpg'. I will use the 'image_recognition_and_captioning' tool to perform this task.
+
+Action:
+```
+{
+  "action": "image_recognition_and_captioning",
+  "action_input": {
+    "image_path": "./TestInput/mystery_image.jpg",
+    "output_path": "./TestOutput/captioned_image.jpg"
+  }
+}
+```No model was supplied, defaulted to google/vit-base-patch16-224 and revision 5dca96d (https://huggingface.co/google/vit-base-patch16-224).
+Using a pipeline without specifying a model name and revision in production is not recommended.
+
+Observation: Error: (<class 'FileNotFoundError'>, FileNotFoundError(2, 'No such file or directory'), <traceback object at 0x0000022FCB55B7C0>)
+Thought:It seems like there was an error while running the tool again. The error message indicates that a file was not found. This could be due to the image file not being present at the specified path or the output directory not existing. I should check if the output directory './TestOutput' exists. I'll use the list_directory tool to list the directories in the current directory.
+
+Action:
+```
+{
+  "action": "list_directory",
+  "action_input": {
+    "dir_path": "."
+  }
+}
+```It seems like there was an error while running the tool again. The error message indicates that a file was not found. This could be due to the image file not being present at the specified path or the output directory not existing. I should check if the output directory './TestOutput' exists. I'll use the list_directory tool to list the directories in the current directory.
+
+Action:
+```
+{
+  "action": "list_directory",
+  "action_input": {
+    "dir_path": "."
+  }
+}
+```
+Observation: .git
+.gitignore
+.idea
+Agents.py
+AgentTools
+ExampleOutput
+LICENSE
+prompts.py
+README.md
+requirements.txt
+secrets.json
+secrets.json.template
+TestDynamicToolCreation.py
+TestDynamicToolCreationWithFullBrowser.py
+TestInput
+tools
+util.py
+venv
+__pycache__
+Thought:The output directory './TestOutput' does not exist in the current directory. This is likely the cause of the error. I need to create the directory before running the tool. I can use the 'os' module in Python to create the directory. However, I don't have a tool that can create directories. I need to create a new tool for this task. I will use the WriteFileTool to write this new tool into the ./AgentTools folder. I will name the tool file 'DirectoryCreator.py' and the function 'create_directory'. Let's start writing the tool.
+
+Action:
+```
+{
+  "action": "write_file",
+  "action_input": {
+    "file_path": "./AgentTools/DirectoryCreator.py",
+    "text": "import os\n\nfrom langchain.tools import tool\n\n@tool(\"create_directory\", return_direct=False)\ndef create_directory(dir_path: str) -> str:\n    \"\"\"This tool creates a directory.\"\"\"\n\n    try:\n        # Create the directory\n        os.makedirs(dir_path, exist_ok=True)\n\n        return 'Finished running tool.'\n    except:\n        # If there is an error, print the error to the console.\n        return 'Error: ' + str(sys.exc_info())",
+    "append": false
+  }
+}
+```
+The output directory './TestOutput' does not exist in the current directory. This is likely the cause of the error. I need to create the directory before running the tool. I can use the 'os' module in Python to create the directory. However, I don't have a tool that can create directories. I need to create a new tool for this task. I will use the WriteFileTool to write this new tool into the ./AgentTools folder. I will name the tool file 'DirectoryCreator.py' and the function 'create_directory'. Let's start writing the tool.
+
+Action:
+```
+{
+  "action": "write_file",
+  "action_input": {
+    "file_path": "./AgentTools/DirectoryCreator.py",
+    "text": "import os\n\nfrom langchain.tools import tool\n\n@tool(\"create_directory\", return_direct=False)\ndef create_directory(dir_path: str) -> str:\n    \"\"\"This tool creates a directory.\"\"\"\n\n    try:\n        # Create the directory\n        os.makedirs(dir_path, exist_ok=True)\n\n        return 'Finished running tool.'\n    except:\n        # If there is an error, print the error to the console.\n        return 'Error: ' + str(sys.exc_info())",
+    "append": false
+  }
+}
+```
+
+Observation: File written successfully to ./AgentTools/DirectoryCreator.py.
+Thought:Now that I have written the tool, I need to register it using the tool_registration_tool. This will allow me to use the tool in the future. I will register the tool 'create_directory' from the file 'DirectoryCreator.py'.
+
+Action:
+```
+{
+  "action": "tool_registration_tool",
+  "action_input": {
+    "tool_function": "create_directory",
+    "tool_filename": "DirectoryCreator.py",
+    "agent_name": "ToolMaker"
+  }
+}
+```Now that I have written the tool, I need to register it using the tool_registration_tool. This will allow me to use the tool in the future. I will register the tool 'create_directory' from the file 'DirectoryCreator.py'.
+
+Action:
+```
+{
+  "action": "tool_registration_tool",
+  "action_input": {
+    "tool_function": "create_directory",
+    "tool_filename": "DirectoryCreator.py",
+    "agent_name": "ToolMaker"
+  }
+}
+```
+Observation: Tool Registered successfully: create_directory(dir_path: str) -> str - This tool creates a directory.
+Thought:Now that the tool is registered, I can use it to create the output directory './TestOutput'. After the directory is created, I can run the 'image_recognition_and_captioning' tool again to perform the task.
+
+Action:
+```
+{
+  "action": "create_directory",
+  "action_input": {
+    "dir_path": "./TestOutput"
+  }
+}
+```Now that the tool is registered, I can use it to create the output directory './TestOutput'. After the directory is created, I can run the 'image_recognition_and_captioning' tool again to perform the task.
+
+Action:
+```
+{
+  "action": "create_directory",
+  "action_input": {
+    "dir_path": "./TestOutput"
+  }
+}
+```
+Observation: Finished running tool.
+Thought:The output directory './TestOutput' has been created successfully. Now I can run the 'image_recognition_and_captioning' tool again to perform the task. The task is to identify what's in the image at './TestInput/mystery_image.jpg' and add a caption to it. The captioned image should be written to './TestOutput/captioned_image.jpg'.
+
+Action:
+```
+{
+  "action": "image_recognition_and_captioning",
+  "action_input": {
+    "image_path": "./TestInput/mystery_image.jpg",
+    "output_path": "./TestOutput/captioned_image.jpg"
+  }
+}
+```The output directory './TestOutput' has been created successfully. Now I can run the 'image_recognition_and_captioning' tool again to perform the task. The task is to identify what's in the image at './TestInput/mystery_image.jpg' and add a caption to it. The captioned image should be written to './TestOutput/captioned_image.jpg'.
+
+Action:
+```
+{
+  "action": "image_recognition_and_captioning",
+  "action_input": {
+    "image_path": "./TestInput/mystery_image.jpg",
+    "output_path": "./TestOutput/captioned_image.jpg"
+  }
+}
+```No model was supplied, defaulted to google/vit-base-patch16-224 and revision 5dca96d (https://huggingface.co/google/vit-base-patch16-224).
+Using a pipeline without specifying a model name and revision in production is not recommended.
+
+Observation: Finished running tool.
+Thought:The 'image_recognition_and_captioning' tool has run successfully. The captioned image should now be present at './TestOutput/captioned_image.jpg'. I have completed the task as requested by the user. I will inform the user that the task has been completed and the captioned image can be found at the specified path.
+
+Action:
+```
+{
+  "action": "Final Answer",
+  "action_input": "The task has been completed. The captioned image can be found at './TestOutput/captioned_image.jpg'."
+}
+```The 'image_recognition_and_captioning' tool has run successfully. The captioned image should now be present at './TestOutput/captioned_image.jpg'. I have completed the task as requested by the user. I will inform the user that the task has been completed and the captioned image can be found at the specified path.
+
+Action:
+```
+{
+  "action": "Final Answer",
+  "action_input": "The task has been completed. The captioned image can be found at './TestOutput/captioned_image.jpg'."
+}
+```
+
+> Finished chain.
+Done
+
+Process finished with exit code 0

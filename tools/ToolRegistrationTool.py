@@ -17,3 +17,13 @@ def tool_registration_tool(tool_function: str, tool_filename: str, agent_name: s
     except:
         # print the exception
         return str(sys.exc_info())
+
+@tool("query_available_modules", return_direct=False)
+def query_available_modules() -> str:
+    """This tool allows an agent to query the available python modules on the system. """
+    try:
+        import pkgutil
+        return "The following libraries exist in your environment" + str([x[1] for x in list(pkgutil.iter_modules())])
+    except:
+        # print the exception
+        return str(sys.exc_info())

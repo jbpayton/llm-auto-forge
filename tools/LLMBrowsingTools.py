@@ -68,12 +68,20 @@ class WebScrapingCache:
             else:
                 tags_to_strip = ['a']
 
+            # Remove script and style tags (and meta tags)
             stripped_text = re.sub(r'<script.*?</script>', '', str(response.content))
             stripped_text = re.sub(r'<style.*?</style>', '', str(stripped_text))
             stripped_text = re.sub(r'<meta.*?</meta>', '', str(stripped_text))
 
             text = markdownify.markdownify(stripped_text, strip=tags_to_strip)
 
+            # Removing \n and \t
+            text = re.sub(r'\\n|\\t', '', text)
+
+            # Removing emoji sequences (unicode escape sequences)
+            text = re.sub(r'\\x[0-9a-f]{2}', '', text)
+
+            # split the text into chunks
             text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size,
                                                            chunk_overlap=chunk_overlap)
             docs = text_splitter.create_documents([text], metadatas=[{"url": url}])
@@ -95,8 +103,8 @@ def query_website(website_url: str, query: str, keep_links: bool = False) -> str
     return str(WebScrapingCache().query_website(website_url, query, keep_links=keep_links))
 
 
-@tool("paged_read_website", return_direct=False)
-def paged_read_website(website_url: str, page: int) -> str:
+@tool("paged_web_browser", return_direct=False)
+def paged_web_browser(website_url: str, page: int) -> str:
     """useful when you need to read data from a website without overflowing context, passing both url and the page number (zero indexed) to the function; DO NOT
     make up any url, the url should only be from the search results. Links can be enabled or disabled as needed. """
     return str(WebScrapingCache().paged_read( website_url, page))
