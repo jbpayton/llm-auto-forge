@@ -53,7 +53,7 @@ For context:
 That being said, there are likely countless others who are making contributions in this space. I encourage you to explore and share your findings.
 ### Further Inspiration
 
-YouTuber and Author David Shapiro's take on [Polymorphic Applications](https://www.youtube.com/watch?v=Y1gBosXlM8c) inspired and resonated with our vision, emphasizing cognitive architectures and system-centric strategies.
+YouTuber and Author David Shapiro's take on [Polymorphic Applications](https://www.youtube.com/watch?v=Y1gBosXlM8c) inspired and resonated with this vision, emphasizing cognitive architectures and system-centric strategies.
 
 ## Key Features
 
