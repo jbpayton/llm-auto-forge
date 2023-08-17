@@ -23,7 +23,7 @@ Haephestia - The mascot of LLM Auto Forge. Generated using Stable Diffusion on m
     - [Tool Servers and Exchanges](#tool-servers-and-exchanges)
     - [Tool Utility Scoring](#tool-utility-scoring)
     - [Curated Tool Suites](#curated-tool-suites)
-- [Disclaimers](#disclaimers)
+- [Disclaimers and Safety Warnings](#disclaimers-and-safety-warnings)
 - [License](#license)
 - [Contact](#contact)
 - [Contributions](#contributions)
@@ -53,7 +53,7 @@ For context:
 That being said, there are likely countless others who are making contributions in this space. I encourage you to explore and share your findings.
 ### Further Inspiration
 
-YouTuber and Author David Shapiro's take on [Polymorphic Applications](https://www.youtube.com/watch?v=Y1gBosXlM8c) inspired and resonated with our vision, emphasizing cognitive architectures and system-centric strategies.
+YouTuber and Author David Shapiro's take on [Polymorphic Applications](https://www.youtube.com/watch?v=Y1gBosXlM8c) inspired and resonated with this vision, emphasizing cognitive architectures and system-centric strategies.
 
 ## Key Features
 
@@ -319,7 +319,7 @@ Moreover, senior or more experienced agents could take on the role of curators, 
 
 Incorporating this roadmap into the project, I am confident in the creation of a more collaborative, efficient, and evolved ecosystem for LangChain agents. 
 
-## Disclaimer and Safety Warnings
+## Disclaimers and Safety Warnings
 
 ### Token Usage Warning
 
