@@ -1,10 +1,9 @@
 import time
 from typing import List, Dict, Optional, Any, Tuple
 
-from langchain import PromptTemplate, LLMChain, OpenAI
+from langchain import PromptTemplate, LLMChain
 from langchain.agents import StructuredChatAgent, AgentExecutor
 from langchain.callbacks.manager import CallbackManagerForChainRun
-from langchain.chat_models import ChatOpenAI
 from langchain.memory import ConversationBufferMemory
 from langchain.schema import SystemMessage, HumanMessage, AIMessage, AgentAction, AgentFinish
 from langchain.tools import Tool
@@ -17,7 +16,7 @@ class DialogueAgent:
         self,
         name: str,
         system_message: SystemMessage = None,
-        model: ChatOpenAI = None,
+        model = None,
     ) -> None:
         self.name = name
         self.system_message = system_message
@@ -113,7 +112,7 @@ class DialogueAgentWithTools(DialogueAgent):
         self,
             name: str,
             system_message: SystemMessage,
-            model: ChatOpenAI,
+            model,
             tools: List,
     ) -> None:
         super().__init__(name, system_message, model)
